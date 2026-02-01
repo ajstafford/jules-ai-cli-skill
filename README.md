@@ -89,4 +89,4 @@ This project is provided for educational and demonstration purposes. Feel free t
 ---
 
 **Built for:** Automation engineers, CI/CD pipelines, and developers using Google Jules
-**Tech Stack:** Python 3, Bash, Jules CLI, GitHub integration
+**Tech Stack:** Python 3, Bash, Jules CLI
