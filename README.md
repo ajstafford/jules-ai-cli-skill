@@ -27,7 +27,10 @@ This skill enables agents to interact with the Jules CLI for task assignment, se
    ```bash
    jules remote list --repo
    ```
+5. **Install into your agent's skills directory**
 
+   Ask your agent: "Please install the skill from ajstafford/jules-cli-skill. You can find the instructions in the SKILL.md file within that repository. Ensure it's placed in your active skills path so you can invoke it when I ask about Jules tasks."
+   
 ## Quick Start
 
 ```bash
