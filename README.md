@@ -1,9 +1,5 @@
 # Jules CLI Skill
 
-[![License: MIT](https://img.shields.io/badge/License-Educational%20Project-blue.svg)](#license)
-
-A production-ready skill for automating [Google Jules](https://jules.google.com) CLI workflows, reducing manual intervention by 80% and eliminating common TTY/authentication errors in automation environments.
-
 ## Overview
 
 This skill enables agents to interact with the Jules CLI for task assignment, session monitoring, and pulling patches from completed remote sessions. Built based on real-world automation pain points and tested with live Jules sessions.
@@ -24,7 +20,7 @@ This skill enables agents to interact with the Jules CLI for task assignment, se
    ```
 3. **Install Jules CLI** and authenticate:
    ```bash
-   # Follow Jules installation guide, then:
+   npm install -g @google/jules
    jules login
    ```
 4. **Verify setup:**
