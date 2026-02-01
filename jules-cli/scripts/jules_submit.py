@@ -35,6 +35,12 @@ def get_session_info(session_id):
         )
         sessions = json.loads(result.stdout)
         
+        # If no session ID is specified, return the most recent session (first in list)
+        if session_id is None:
+            if sessions:
+                return sessions[0]
+            return None
+
         # Find the session with matching ID
         for session in sessions:
             if session.get("id") == session_id:
