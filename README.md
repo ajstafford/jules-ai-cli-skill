@@ -2,91 +2,64 @@
 
 ## Overview
 
-This skill enables agents to interact with the Jules CLI for task assignment, session monitoring, and pulling patches from completed remote sessions. Built based on real-world automation pain points and tested with live Jules sessions.
+This skill enables agents to interact with the Jules CLI for task assignment, session monitoring, and pulling patches from completed remote sessions. It is designed with a **Manual & Intentional** philosophy to prevent runaway automation and ensure resources are used only for complex, appropriate tasks.
 
 **Key Features:**
-- **Automated task submission and monitoring** - Fire-and-forget or wait-for-completion modes
-- **Session lifecycle management** - Complete workflow: create → wait → pull → apply
-- **TTY-safe automation** - Handles terminal interaction issues common in CI/CD pipelines
-- **Error handling** - Built-in retry logic and prerequisite validation
-- **Session parsing utilities** - Converts Jules tabular output to structured JSON
+- **Intent-Driven Workflow** - Explicit steps for session creation and monitoring.
+- **Safety Controls** - Built-in complexity thresholds and anti-proliferation rules.
+- **Direct CLI Control** - Leverages the raw `jules` CLI for maximum transparency.
+- **One-liner Utilities** - Robust Python/Shell one-liners for status parsing without external scripts.
+- **Error Handling Documentation** - Extensive guides for common Jules edge cases (TTY, login, repository formats).
 
 ## Installation
 
-1. **Clone or download** this repository
-2. **Make scripts executable:**
-   ```bash
-   chmod +x jules-cli/scripts/*
-   ```
-3. **Install Jules CLI** and authenticate:
+1. **Clone or download** this repository.
+2. **Install Jules CLI** and authenticate:
    ```bash
    npm install -g @google/jules
    jules login
    ```
-4. **Verify setup:**
+3. **Verify setup:**
    ```bash
    jules remote list --repo
    ```
-5. **Ask your agent (opencode, openclaw, etc.) to install into your agent's skills directory**
+4. **Point your agent** (OpenClaw, etc.) to the `jules-cli` directory. The agent will read `SKILL.md` to understand its operating boundaries.
 
-  ```
-   Please install the skill from ajstafford/jules-cli-skill. You can find the instructions in the SKILL.md file within that repository. Ensure it's placed in your active skills path so you can invoke it when I ask about Jules tasks.
-  ```
-   
-## Quick Start
+## Usage Guidelines (CRITICAL)
 
-```bash
-# 1. Verify your repositories
-jules remote list --repo
-
-# 2. Submit a task and wait for completion
-./jules-cli/scripts/jules_submit.py --repo username/repo "Your task description"
-```
-
-**Note:** Use your GitHub username/org format (e.g., `octocat/Hello-World`), not your local system username.
+To prevent inappropriate resource usage, the following rules are enforced:
+- **Local First**: Use local tools for small refactors, comments, or typos.
+- **Complexity Threshold**: Only use Jules for large-scale, isolated, or exploratory tasks.
+- **No Proliferation**: One session at a time. Never bulk-create or loop over session creation.
 
 ## Documentation
 
-- **[SKILL.md](jules-cli/SKILL.md)** - Complete skill documentation with workflows, examples, and troubleshooting
-- **[usage.md](jules-cli/references/usage.md)** - Command reference for all Jules CLI commands
-- **[jules_submit.py](jules-cli/scripts/jules_submit.py)** - Main automation script (118 lines, production-ready)
+- **[SKILL.md](jules-cli/SKILL.md)** - Main skill documentation with safety rules, workflows, and monitoring one-liners.
+- **[usage.md](jules-cli/references/usage.md)** - Detailed command reference for all native Jules CLI commands.
 
 ## Project Structure
 
 ```
 jules-cli/
-├── SKILL.md              # Main skill documentation (157 lines)
+├── SKILL.md              # Safety guidelines, workflows, and CLI monitoring
 ├── references/
-│   └── usage.md          # Detailed command reference (107 lines)
-└── scripts/
-    ├── jules_submit.py   # Automated workflow script (Python)
-    ├── wait_for_session.sh   # Session polling script (Bash)
-    └── parse_sessions.py     # Output parsing utility (Python)
+│   └── usage.md          # Comprehensive command reference
+└── assets/               # Supporting documentation assets
 ```
-
-**Total:** 551 lines of documentation and code
 
 ## Testing & Validation
 
-This skill has been tested with live Jules sessions including:
-- Session creation and monitoring
-- TTY/authentication error scenarios
-- Repository format validation workflows
-- Edge case handling (missing HOME, credential issues)
-
-See [jules-cli/SKILL.md](jules-cli/SKILL.md) Common Error Patterns section for documented issues and solutions discovered during testing.
+This skill has been validated through live Jules sessions, specifically focusing on:
+- Intentional session lifecycle (Create -> Poll -> Apply).
+- Handling TTY and authentication scenarios in non-interactive environments.
+- Correct repository format validation (`GITHUB_USERNAME/REPO`).
 
 ## Prerequisites
 
-1. **Jules CLI** - Install and authenticate with `jules login`
-2. **Python 3** - Required for wrapper scripts
-3. **GitHub Account** - Jules works with GitHub repositories
+1. **Jules CLI** - Must be installed and authenticated.
+2. **GitHub Account** - Required for Jules remote sessions.
+3. **Standard Unix Tools** - `grep`, `awk`, and `python3` for status parsing one-liners.
 
 ## License
 
 This project is provided for educational and demonstration purposes. Feel free to use, modify, and distribute with attribution.
-
----
-
-**Built for:** Automation engineers, CI/CD pipelines, and developers using Google Jules
-**Tech Stack:** Python 3, Bash, Jules CLI
