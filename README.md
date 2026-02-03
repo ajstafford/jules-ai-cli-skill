@@ -44,7 +44,6 @@ jules-cli/
 ├── SKILL.md              # Safety guidelines, workflows, and CLI monitoring
 ├── references/
 │   └── usage.md          # Comprehensive command reference
-└── assets/               # Supporting documentation assets
 ```
 
 ## Testing & Validation
