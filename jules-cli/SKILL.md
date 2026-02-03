@@ -26,51 +26,50 @@ To prevent excessive and inappropriate session creation, you **must** follow the
 ---
 
 ## Safety Controls
-*   **Approval Required**: If you are unsure if a task is "complex enough" for Jules, ask the user for permission before running `jules remote new`.
-*   **Verification**: Always run `jules remote list --session` before creating a new one to ensure you don't already have a pending session for the same repository.
+*   **Approval Required**: If you are unsure if a task is "complex enough" for Jules, ask the user for permission before running `new`.
+*   **Verification**: Always list sessions before creating a new one to ensure you don't already have a pending session for the same repository.
 
 ---
 
-## Core Workflow (Manual Control)
+## Core Workflow
 
-Prefer using the CLI directly to maintain situational awareness.
+Use the provided Python interface script to interact with Jules in a cross-platform, safe manner.
 
 ### 1. Pre-flight Check
 Verify repository access and format.
 ```bash
-jules remote list --repo
+python3 jules-cli/jules_interface.py list-repos
 ```
 *Note: Ensure the repo format is `GITHUB_USERNAME/REPO`.*
 
 ### 2. Submit Task
-Create a session and capture the Session ID.
+Create a session and capture the Session ID from the output.
 ```bash
 # Capture the output to get the ID
-jules remote new --repo <repo> --session "Detailed task description" < /dev/null
+python3 jules-cli/jules_interface.py new --repo <repo> --task "Detailed task description"
 ```
 
 ### 3. Monitor Progress
-List sessions and look for your ID. Use this robust one-liner to check the status (it handles statuses with spaces like "In Progress"):
+Check the status of your specific session. The script parses the output and returns the status (e.g., "In Progress", "Completed").
 
 **Check Status:**
 ```bash
-# Extract status for a specific ID by splitting on 2+ spaces
-jules remote list --session | python3 -c "import sys, re; [print(re.split(r'\s{2,}', l.strip())[-1]) for l in sys.stdin if l.startswith('<SESSION_ID>')] "
+python3 jules-cli/jules_interface.py status --id <SESSION_ID>
 ```
 
 ### 4. Integrate Results
 Once the status is **Completed**, pull and apply the changes.
 ```bash
-jules remote pull --session <SESSION_ID> --apply < /dev/null
+python3 jules-cli/jules_interface.py pull --id <SESSION_ID>
 ```
 
 ---
 
 ## Error Handling & Troubleshooting
 
-*   **Repository Not Found**: Verify format with `jules remote list --repo`. It must match the GitHub path.
-*   **TTY Errors**: Always use `< /dev/null` for non-interactive automation with the raw `jules` command.
+*   **Repository Not Found**: Verify format with `list-repos`. It must match the GitHub path.
 *   **Credentials**: If you see login errors, ensure `HOME` is set correctly or run `jules login`.
+*   **Script Errors**: Ensure `jules` is in your PATH and you are using Python 3.
 
 ---
 
@@ -78,8 +77,7 @@ jules remote pull --session <SESSION_ID> --apply < /dev/null
 
 | Command | Purpose |
 | :--- | :--- |
-| `jules remote list --repo` | Verify available repositories and their exact names. |
-| `jules remote list --session` | List active and past sessions to check status. |
-| `jules remote new` | Create a new coding task. |
-| `jules remote pull` | Apply changes from a completed session. |
-| `jules teleport <id>` | Clone and apply changes (useful for fresh environments). |
+| `python3 jules-cli/jules_interface.py list-repos` | Verify available repositories and their exact names. |
+| `python3 jules-cli/jules_interface.py status --id <ID>` | Check status of a specific session. |
+| `python3 jules-cli/jules_interface.py new --repo <R> --task <T>` | Create a new coding task. |
+| `python3 jules-cli/jules_interface.py pull --id <ID>` | Apply changes from a completed session. |

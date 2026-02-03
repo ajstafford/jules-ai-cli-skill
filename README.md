@@ -7,9 +7,8 @@ This skill enables agents to interact with the Jules CLI for task assignment, se
 **Key Features:**
 - **Intent-Driven Workflow** - Explicit steps for session creation and monitoring.
 - **Safety Controls** - Built-in complexity thresholds and anti-proliferation rules.
-- **Direct CLI Control** - Leverages the raw `jules` CLI for maximum transparency.
-- **One-liner Utilities** - Robust Python/Shell one-liners for status parsing without external scripts.
-- **Error Handling Documentation** - Extensive guides for common Jules edge cases (TTY, login, repository formats).
+- **Cross-Platform Interface** - A unified Python script handles TTY and status parsing across environments.
+- **Error Handling Documentation** - Extensive guides for common Jules edge cases (login, repository formats).
 
 ## Installation
 
@@ -21,7 +20,7 @@ This skill enables agents to interact with the Jules CLI for task assignment, se
    ```
 3. **Verify setup:**
    ```bash
-   jules remote list --repo
+   python3 jules-cli/jules_interface.py list-repos
    ```
 4. **Point your agent** (OpenClaw, etc.) to the `jules-cli` directory. The agent will read `SKILL.md` to understand its operating boundaries.
 
@@ -34,14 +33,15 @@ To prevent inappropriate resource usage, the following rules are enforced:
 
 ## Documentation
 
-- **[SKILL.md](jules-cli/SKILL.md)** - Main skill documentation with safety rules, workflows, and monitoring one-liners.
-- **[usage.md](jules-cli/references/usage.md)** - Detailed command reference for all native Jules CLI commands.
+- **[SKILL.md](jules-cli/SKILL.md)** - Main skill documentation with safety rules and workflows.
+- **[usage.md](jules-cli/references/usage.md)** - Detailed command reference.
 
 ## Project Structure
 
 ```
 jules-cli/
-├── SKILL.md              # Safety guidelines, workflows, and CLI monitoring
+├── SKILL.md              # Safety guidelines, workflows
+├── jules_interface.py    # Cross-platform Python wrapper
 ├── references/
 │   └── usage.md          # Comprehensive command reference
 ```
@@ -57,7 +57,7 @@ This skill has been validated through live Jules sessions, specifically focusing
 
 1. **Jules CLI** - Must be installed and authenticated.
 2. **GitHub Account** - Required for Jules remote sessions.
-3. **Standard Unix Tools** - `grep`, `awk`, and `python3` for status parsing one-liners.
+3. **Python 3** - Required for the interface script.
 
 ## License
 
