@@ -10,29 +10,30 @@ The Jules CLI is for **asynchronous, complex tasks**. It must not be used for tr
 - **Correct:** `octocat/repo`
 - **Incorrect:** `localuser/repo`
 
-Verify available repos:
+Verify available repos using the Python interface:
 ```bash
-jules remote list --repo
+python3 jules-cli/jules_interface.py list-repos
 ```
 
 ---
 
-## Manual Workflow
+## Workflow
 
 ### 1. New Session
 ```bash
-jules remote new --repo <repo> --session "Detailed task description" < /dev/null
+python3 jules-cli/jules_interface.py new --repo <repo> --task "Detailed task description"
 ```
+*Note the Session ID from the output.*
 
 ### 2. Status Monitoring
-The `jules remote list --session` command returns a table. Use this Python one-liner to get the exact status for an ID:
+Use the interface to get the exact status for an ID:
 ```bash
-jules remote list --session | python3 -c "import sys, re; [print(re.split(r'\s{2,}', l.strip())[-1]) for l in sys.stdin if l.startswith('<SESSION_ID>')] "
+python3 jules-cli/jules_interface.py status --id <SESSION_ID>
 ```
 
 ### 3. Applying Changes
 ```bash
-jules remote pull --session <SESSION_ID> --apply < /dev/null
+python3 jules-cli/jules_interface.py pull --id <SESSION_ID>
 ```
 
 ---
@@ -41,6 +42,6 @@ jules remote pull --session <SESSION_ID> --apply < /dev/null
 
 | Issue | Solution |
 | :--- | :--- |
-| **"repo doesn't exist"** | Use `jules remote list --repo` to check the exact name. |
-| **TTY errors** | Append `< /dev/null` to your `jules` commands. |
+| **"repo doesn't exist"** | Use `list-repos` to check the exact name. |
 | **Login failures** | Run `jules login` or ensure `HOME` is correctly exported. |
+| **Script Errors** | Ensure `jules` is in your PATH and Python 3 is installed. |
