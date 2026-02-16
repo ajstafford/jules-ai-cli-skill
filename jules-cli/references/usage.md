@@ -1,5 +1,7 @@
 # Jules CLI Usage Reference
 
+For the complete command/flag surface and authoritative reference, see `jules-cli/SKILL.md`.
+
 ## Core Philosophy: Manual & Intentional
 The Jules CLI is for **asynchronous, complex tasks**. It must not be used for trivial edits. Direct CLI usage is required to maintain visibility and prevent "runaway" automation.
 
@@ -53,35 +55,6 @@ unset JULES_SESSION_ID
 ```bash
 jules remote pull --session "<SESSION_ID>" --apply < /dev/null
 ```
-
----
-
-## Command And Flag Matrix
-
-### Top-Level Commands
-| Command | Purpose | Key Options |
-| :--- | :--- | :--- |
-| `jules` | Launch TUI. | `--theme <dark|light>` |
-| `jules new "<task>"` | Create session from cwd or explicit repo. | `--repo <owner/repo|.>`, `--parallel <1-5>` |
-| `jules remote` | Remote session namespace. | `list`, `new`, `pull` |
-| `jules teleport "<session_id>"` | Clone/apply patch or apply in matching repo. | none |
-| `jules login` | Authenticate to Jules. | none |
-| `jules logout` | Clear auth state. | none |
-| `jules version` | Print CLI version. | none |
-| `jules completion <shell>` | Generate shell completion script. | shell target |
-| `jules help [command]` | Show help. | optional command |
-
-### Remote Subcommands
-| Command | Purpose | Key Options |
-| :--- | :--- | :--- |
-| `jules remote list` | List repos or sessions. | `--repo`, `--session` |
-| `jules remote new` | Create remote VM session. | `--repo <owner/repo|.>`, `--session "<task>"`, `--parallel <1-5>` |
-| `jules remote pull` | Pull result and optionally apply patch. | `--session <id>`, `--apply` |
-
-### Global Flags
-| Flag | Purpose |
-| :--- | :--- |
-| `--theme <dark|light>` | Choose CLI theme. |
 
 ---
 
