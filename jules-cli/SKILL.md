@@ -11,7 +11,7 @@ env:
 # Jules CLI Skill
 
 ## Overview
-This skill enables the agent to interact with the `jules` CLI. It supports task assignment, session monitoring, and result integration.
+This skill enables the agent to interact with the full `jules` CLI surface, including local session creation (`jules new`), remote session workflows (`jules remote ...`), and integration flows (`jules remote pull`, `jules teleport`).
 
 ## Usage Guidelines (CRITICAL)
 
@@ -22,10 +22,10 @@ To prevent excessive and inappropriate session creation, you **must** follow the
     *   **Large-scale**: Touching many files or requiring significant architectural changes.
     *   **Isolated**: Benefiting from a clean, remote environment to avoid local dependency issues.
     *   **Exploratory**: Tasks where the solution isn't immediately obvious and requires iteration in a VM.
-3.  **No Proliferation (One at a Time)**: 
-    *   **Never** create multiple sessions for the same task.
-    *   **Never** use a loop or parallel execution to spin up several sessions at once.
-    *   Wait for a session to complete and inspect the results before deciding if another session is needed.
+3.  **No Proliferation (One at a Time by Default)**:
+    *   Default to one session per task and inspect results before creating another.
+    *   Use `--parallel` only when explicitly justified by the task and user intent.
+    *   Never use unbounded loops to create sessions.
 4.  **No "Small" Tasks**: Do not submit tasks like "Add a comment", "Change a variable name", or "Fix a typo".
 
 ---
@@ -35,7 +35,7 @@ To prevent excessive and inappropriate session creation, you **must** follow the
 To ensure safe execution of CLI commands, you **must** adhere to the following security practices:
 
 1.  **Input Validation**: Before running any command, validate that:
-    *   **Repository names** follow the `owner/repo` format (alphanumeric, dots, hyphens, and underscores).
+    *   **Repository names** are either `owner/repo` (alphanumeric, dots, hyphens, and underscores) or `.` when intentionally targeting the current working repository.
     *   **Session IDs** are alphanumeric (typically hyphens and underscores are also allowed).
 2.  **Quoting**: Always wrap shell placeholders in double quotes (e.g., `"<repo>"`).
 3.  **No Inline Injection**: Never embed user-provided data directly into script strings (like `python3 -c`). Use environment variables to pass such data safely.
@@ -45,6 +45,7 @@ To ensure safe execution of CLI commands, you **must** adhere to the following s
 
 ## Safety Controls
 *   **Approval Required (MANDATORY)**: You **must** ask for explicit user approval before running any of the following commands:
+    *   `jules new`: Since this creates one or more sessions.
     *   `jules remote new`: Since this creates a remote session/VM.
     *   `jules remote pull --apply`: Since this modifies the local codebase.
     *   `jules teleport`: Since this clones and modifies the environment.
@@ -67,9 +68,11 @@ jules remote list --repo
 ### 2. Submit Task
 Create a session and capture the Session ID.
 ```bash
-# Capture the output to get the ID
-# Replace <repo> and task description with validated inputs
+# Remote VM workflow (explicit remote execution)
 jules remote new --repo "<repo>" --session "Detailed task description" < /dev/null
+
+# Local workflow (defaults to cwd repo, can also pass --repo "<repo>" or --repo .)
+jules new --repo "<repo>" "Detailed task description" < /dev/null
 ```
 
 ### 3. Monitor Progress
@@ -111,10 +114,27 @@ jules remote pull --session "<SESSION_ID>" --apply < /dev/null
 
 ## Command Reference
 
-| Command | Purpose |
+### Top-Level Commands
+| Command | Purpose | Key Options |
+| :--- | :--- | :--- |
+| `jules` | Launch TUI. | `--theme <dark|light>` |
+| `jules new "<task>"` | Create session from current repo or explicit repo. | `--repo <owner/repo|.>`, `--parallel <1-5>` |
+| `jules remote` | Remote session namespace. | `list`, `new`, `pull` |
+| `jules teleport "<session_id>"` | Clone/apply patch or apply in matching repo. | none |
+| `jules login` | Authenticate CLI with Google account. | none |
+| `jules logout` | Remove local auth state. | none |
+| `jules version` | Show CLI version. | none |
+| `jules completion <shell>` | Generate shell completions. | shell target |
+| `jules help [command]` | Show command help. | optional command |
+
+### Remote Subcommands
+| Command | Purpose | Key Options |
+| :--- | :--- | :--- |
+| `jules remote list` | List repos or sessions. | `--repo`, `--session` |
+| `jules remote new` | Create remote VM coding session. | `--repo <owner/repo|.>`, `--session "<task>"`, `--parallel <1-5>` |
+| `jules remote pull` | Pull session result locally. | `--session <id>`, `--apply` |
+
+### Global Flags
+| Flag | Purpose |
 | :--- | :--- |
-| `jules remote list --repo` | Verify available repositories and their exact names. |
-| `jules remote list --session` | List active and past sessions to check status. |
-| `jules remote new` | Create a new coding task. |
-| `jules remote pull` | Apply changes from a completed session. |
-| `jules teleport "<id>"` | Clone and apply changes (useful for fresh environments). |
+| `--theme <dark|light>` | Choose CLI theme. |
