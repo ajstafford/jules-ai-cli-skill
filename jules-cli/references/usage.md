@@ -1,13 +1,16 @@
 # Jules CLI Usage Reference
 
+For the complete command/flag surface and authoritative reference, see `jules-cli/SKILL.md`.
+
 ## Core Philosophy: Manual & Intentional
 The Jules CLI is for **asynchronous, complex tasks**. It must not be used for trivial edits. Direct CLI usage is required to maintain visibility and prevent "runaway" automation.
 
 ---
 
 ## Repository Format
-**Critical:** Always use the GitHub organization/username format.
+**Critical:** Prefer explicit GitHub `owner/repo` format when targeting a remote repository.
 - **Correct:** `octocat/repo`
+- **Also valid:** `.`
 - **Incorrect:** `localuser/repo`
 
 Verify available repos:
@@ -20,9 +23,16 @@ jules remote list --repo
 ## Manual Workflow
 
 ### 1. New Session
-Always quote the repository name and session description.
+Choose the command based on where you want execution to happen.
 ```bash
+# Remote VM workflow
 jules remote new --repo "<repo>" --session "Detailed task description" < /dev/null
+
+# Local workflow (current repo by default)
+jules new "Detailed task description" < /dev/null
+
+# Optional: run a small bounded fan-out when explicitly needed
+jules remote new --repo "<repo>" --session "Detailed task description" --parallel 3 < /dev/null
 ```
 
 ### 2. Status Monitoring
